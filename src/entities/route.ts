@@ -6,11 +6,11 @@ import { Token, WETH } from './token'
 import { Pair } from './pair'
 import { Price } from './fractions/price'
 
-const packPathEntry = (pair: Pair, zeroForOne: boolean) => [
+export const packPathEntry = (pair: Pair, zeroForOne: boolean) => [
   '0x',
   pair.liquidityToken.address.slice(2).padStart(62, '0'),
   zeroForOne ? '01' : '00'
-].join('')
+].join('');
 
 export class Route {
   public readonly pairs: Pair[]
