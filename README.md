@@ -1,5 +1,9 @@
 # Narwhal SDK
 
+<p align="center">
+  <img src="./assets/narwhal.png">
+</p>
+
 This is a fork of the Uniswap SDK which supports both Uniswap and Sushiswap.
 
 ## Running tests
@@ -12,7 +16,7 @@ First clone the repository:
 git clone https://github.com/indexed-finance/narwhal-sdk.git
 ```
 
-Move into the sushiswap-sdk working directory
+Move into the narwhal-sdk working directory
 
 ```sh
 cd narwhal-sdk/
