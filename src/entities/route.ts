@@ -6,12 +6,20 @@ import { Token, WETH } from './token'
 import { Pair } from './pair'
 import { Price } from './fractions/price'
 
+const packPathEntry = (pair: Pair, zeroForOne: boolean) => [
+  '0x',
+  pair.liquidityToken.address.slice(2).padStart(62, '0'),
+  zeroForOne ? '01' : '00'
+].join('')
+
 export class Route {
   public readonly pairs: Pair[]
   public readonly path: Token[]
   public readonly input: Currency
   public readonly output: Currency
   public readonly midPrice: Price
+  public readonly encodedPath: string[]
+
 
   public constructor(pairs: Pair[], input: Currency, output?: Currency) {
     invariant(pairs.length > 0, 'PAIRS')
@@ -32,15 +40,19 @@ export class Route {
     )
 
     const path: Token[] = [input instanceof Token ? input : WETH[pairs[0].chainId]]
+    const encodedPath: string[] = []
     for (const [i, pair] of pairs.entries()) {
       const currentInput = path[i]
       invariant(currentInput.equals(pair.token0) || currentInput.equals(pair.token1), 'PATH')
-      const output = currentInput.equals(pair.token0) ? pair.token1 : pair.token0
+      const zeroForOne = currentInput.equals(pair.token0)
+      const output = zeroForOne ? pair.token1 : pair.token0
       path.push(output)
+      encodedPath.push(packPathEntry(pair, zeroForOne))
     }
 
     this.pairs = pairs
     this.path = path
+    this.encodedPath = encodedPath
     this.midPrice = Price.fromRoute(this)
     this.input = input
     this.output = output ?? path[path.length - 1]

@@ -36,15 +36,18 @@ describe('entities', () => {
         pairs = [
           new Pair(
             new TokenAmount(tokens[0], decimalize(1, tokens[0].decimals)),
-            new TokenAmount(tokens[1], decimalize(1, tokens[1].decimals))
+            new TokenAmount(tokens[1], decimalize(1, tokens[1].decimals)),
+            true
           ),
           new Pair(
             new TokenAmount(tokens[1], decimalize(1, tokens[1].decimals)),
-            new TokenAmount(tokens[2], decimalize(1, tokens[2].decimals))
+            new TokenAmount(tokens[2], decimalize(1, tokens[2].decimals)),
+            true
           ),
           new Pair(
             new TokenAmount(tokens[2], decimalize(1, tokens[2].decimals)),
-            new TokenAmount(WETH, decimalize(1234, WETH.decimals))
+            new TokenAmount(WETH, decimalize(1234, WETH.decimals)),
+            true
           )
         ]
       })
@@ -104,7 +107,8 @@ describe('entities', () => {
             [
               new Pair(
                 new TokenAmount(tokens[1], decimalize(5, tokens[1].decimals)),
-                new TokenAmount(WETH, decimalize(10, WETH.decimals))
+                new TokenAmount(WETH, decimalize(10, WETH.decimals)),
+                true
               )
             ],
             tokens[1]
@@ -158,7 +162,8 @@ describe('entities', () => {
                     WETH,
                     decimalize(10, WETH.decimals) +
                       (tokens[1].decimals === 9 ? BigInt('30090280812437312') : BigInt('30090270812437322'))
-                  )
+                  ),
+                  true
                 )
               ],
               tokens[1]
