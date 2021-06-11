@@ -6,11 +6,13 @@ import { Token, WETH } from './token'
 import { Pair } from './pair'
 import { Price } from './fractions/price'
 
-export const packPathEntry = (pair: Pair, zeroForOne: boolean) => [
-  '0x',
-  pair.liquidityToken.address.slice(2).padStart(62, '0'),
-  zeroForOne ? '01' : '00'
-].join('');
+export function encodePathToken(token: Token, sushi: boolean) {
+  return [
+    '0x',
+    token.address.slice(2).padStart(62, '0'),
+    sushi ? '01' : '00'
+  ].join('');
+}
 
 export class Route {
   public readonly pairs: Pair[]
@@ -40,14 +42,19 @@ export class Route {
     )
 
     const path: Token[] = [input instanceof Token ? input : WETH[pairs[0].chainId]]
-    const encodedPath: string[] = []
+    const encodedPath: string[] = [
+      encodePathToken(path[0], pairs[0].sushi)
+    ]
     for (const [i, pair] of pairs.entries()) {
       const currentInput = path[i]
       invariant(currentInput.equals(pair.token0) || currentInput.equals(pair.token1), 'PATH')
-      const zeroForOne = currentInput.equals(pair.token0)
-      const output = zeroForOne ? pair.token1 : pair.token0
+      const output = currentInput.equals(pair.token0) ? pair.token1 : pair.token0
       path.push(output)
-      encodedPath.push(packPathEntry(pair, zeroForOne))
+      let sushi = false;
+      if (i < pairs.length - 1) {
+        sushi = pairs[i + 1].sushi;
+      }
+      encodedPath.push(encodePathToken(output, sushi))
     }
 
     this.pairs = pairs
