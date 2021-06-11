@@ -1,5 +1,5 @@
 import invariant from 'tiny-invariant'
-import { ChainId, CurrencyAmount, ETHER, packPathEntry, Pair, Percent, Route, Router, Token, TokenAmount, Trade, WETH } from '../src'
+import { ChainId, CurrencyAmount, encodePathToken, ETHER, Pair, Percent, Route, Router, Token, TokenAmount, Trade, WETH } from '../src'
 import JSBI from 'jsbi'
 
 function checkDeadline(deadline: string[] | string): void {
@@ -15,7 +15,7 @@ describe('Router', () => {
 
   const pair_0_1 = new Pair(new TokenAmount(token0, JSBI.BigInt(1000)), new TokenAmount(token1, JSBI.BigInt(1000)), true)
 
-  const pair_weth_0 = new Pair(new TokenAmount(WETH[ChainId.MAINNET], '1000'), new TokenAmount(token0, '1000'), true)
+  const pair_weth_0 = new Pair(new TokenAmount(WETH[ChainId.MAINNET], '1000'), new TokenAmount(token0, '1000'), false)
 
   describe('#swapCallParameters', () => {
     describe('exact in', () => {
@@ -27,7 +27,11 @@ describe('Router', () => {
         expect(result.methodName).toEqual('swapExactETHForTokens')
         expect(result.args.slice(0, -1)).toEqual([
           '0x51',
-          [packPathEntry(pair_weth_0, false), packPathEntry(pair_0_1, true)],
+          [
+            encodePathToken(WETH[ChainId.MAINNET], false),
+            encodePathToken(token0, true),
+            encodePathToken(token1, false),
+          ],
           '0x0000000000000000000000000000000000000004'
         ])
         expect(result.value).toEqual('0x64')
@@ -42,7 +46,11 @@ describe('Router', () => {
         expect(result.args.slice(0, -1)).toEqual([
           '0x64',
           '0x51',
-          [packPathEntry(pair_0_1, false), packPathEntry(pair_weth_0, true)],
+          [
+            encodePathToken(token1, true),
+            encodePathToken(token0, false),
+            encodePathToken(WETH[ChainId.MAINNET], false)
+          ],
           '0x0000000000000000000000000000000000000004'
         ])
         expect(result.value).toEqual('0x0')
@@ -57,7 +65,10 @@ describe('Router', () => {
         expect(result.args.slice(0, -1)).toEqual([
           '0x64',
           '0x59',
-          [packPathEntry(pair_0_1, true)],
+          [
+            encodePathToken(token0, true),
+            encodePathToken(token1, false)
+          ],
           '0x0000000000000000000000000000000000000004'
         ])
         expect(result.value).toEqual('0x0')
@@ -73,7 +84,11 @@ describe('Router', () => {
         expect(result.methodName).toEqual('swapETHForExactTokens')
         expect(result.args.slice(0, -1)).toEqual([
           '0x64',
-          [packPathEntry(pair_weth_0, false), packPathEntry(pair_0_1, true)],
+          [
+            encodePathToken(WETH[ChainId.MAINNET], false),
+            encodePathToken(token0, true),
+            encodePathToken(token1, false)
+          ],
           '0x0000000000000000000000000000000000000004'
         ])
         expect(result.value).toEqual('0x80')
@@ -88,7 +103,11 @@ describe('Router', () => {
         expect(result.args.slice(0, -1)).toEqual([
           '0x64',
           '0x80',
-          [packPathEntry(pair_0_1, false), packPathEntry(pair_weth_0, true)],
+          [
+            encodePathToken(token1, true),
+            encodePathToken(token0, false),
+            encodePathToken(WETH[ChainId.MAINNET], false),
+          ],
           '0x0000000000000000000000000000000000000004'
         ])
         expect(result.value).toEqual('0x0')
@@ -103,7 +122,10 @@ describe('Router', () => {
         expect(result.args.slice(0, -1)).toEqual([
           '0x64',
           '0x71',
-          [packPathEntry(pair_0_1, true)],
+          [
+            encodePathToken(token0, true),
+            encodePathToken(token1, false),
+          ],
           '0x0000000000000000000000000000000000000004'
         ])
         expect(result.value).toEqual('0x0')
