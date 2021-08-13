@@ -1,7 +1,7 @@
 {
   "name": "@bishares/narwhal-sdk",
   "license": "MIT",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "🛠 An SDK for building applications on top of Sushiswap and Uniswap.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -20,7 +20,8 @@
     "build": "tsdx build",
     "start": "tsdx watch",
     "test": "tsdx test",
-    "prepublishOnly": "tsdx build"
+    "prepublishOnly": "tsdx build",
+    "postinstall": "tsdx build"
   },
   "dependencies": {
     "@uniswap/v2-core": "^1.0.0",
