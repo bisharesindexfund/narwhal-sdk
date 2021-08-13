@@ -1,5 +1,5 @@
 import invariant from 'tiny-invariant'
-import { ChainId, CurrencyAmount, encodePathToken, ETHER, Pair, Percent, Route, Router, Token, TokenAmount, Trade, WETH } from '../src'
+import { ChainId, CurrencyAmount, encodePathToken, ETHER, Pair, Percent, Route, Router, Token, TokenAmount, Trade, WBNB } from '../src'
 import JSBI from 'jsbi'
 
 function checkDeadline(deadline: string[] | string): void {
@@ -15,7 +15,7 @@ describe('Router', () => {
 
   const pair_0_1 = new Pair(new TokenAmount(token0, JSBI.BigInt(1000)), new TokenAmount(token1, JSBI.BigInt(1000)), true)
 
-  const pair_weth_0 = new Pair(new TokenAmount(WETH[ChainId.MAINNET], '1000'), new TokenAmount(token0, '1000'), false)
+  const pair_weth_0 = new Pair(new TokenAmount(WBNB[ChainId.MAINNET], '1000'), new TokenAmount(token0, '1000'), false)
 
   describe('#swapCallParameters', () => {
     describe('exact in', () => {
@@ -28,7 +28,7 @@ describe('Router', () => {
         expect(result.args.slice(0, -1)).toEqual([
           '0x51',
           [
-            encodePathToken(WETH[ChainId.MAINNET], false),
+            encodePathToken(WBNB[ChainId.MAINNET], false),
             encodePathToken(token0, true),
             encodePathToken(token1, false),
           ],
@@ -49,7 +49,7 @@ describe('Router', () => {
           [
             encodePathToken(token1, true),
             encodePathToken(token0, false),
-            encodePathToken(WETH[ChainId.MAINNET], false)
+            encodePathToken(WBNB[ChainId.MAINNET], false)
           ],
           '0x0000000000000000000000000000000000000004'
         ])
@@ -85,7 +85,7 @@ describe('Router', () => {
         expect(result.args.slice(0, -1)).toEqual([
           '0x64',
           [
-            encodePathToken(WETH[ChainId.MAINNET], false),
+            encodePathToken(WBNB[ChainId.MAINNET], false),
             encodePathToken(token0, true),
             encodePathToken(token1, false)
           ],
@@ -106,7 +106,7 @@ describe('Router', () => {
           [
             encodePathToken(token1, true),
             encodePathToken(token0, false),
-            encodePathToken(WETH[ChainId.MAINNET], false),
+            encodePathToken(WBNB[ChainId.MAINNET], false),
           ],
           '0x0000000000000000000000000000000000000004'
         ])

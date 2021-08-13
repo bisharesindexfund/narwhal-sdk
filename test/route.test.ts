@@ -1,9 +1,9 @@
-import { Token, WETH, ChainId, Pair, TokenAmount, Route, ETHER } from '../src'
+import { Token, WBNB, ChainId, Pair, TokenAmount, Route, ETHER } from '../src'
 
 describe('Route', () => {
   const token0 = new Token(ChainId.MAINNET, '0x0000000000000000000000000000000000000001', 18, 't0')
   const token1 = new Token(ChainId.MAINNET, '0x0000000000000000000000000000000000000002', 18, 't1')
-  const weth = WETH[ChainId.MAINNET]
+  const weth = WBNB[ChainId.MAINNET]
   const pair_0_1 = new Pair(new TokenAmount(token0, '100'), new TokenAmount(token1, '200'), true)
   const pair_0_weth = new Pair(new TokenAmount(token0, '100'), new TokenAmount(weth, '100'), true)
   const pair_1_weth = new Pair(new TokenAmount(token1, '175'), new TokenAmount(weth, '100'), true)

@@ -1,5 +1,5 @@
 {
-  "name": "@indexed-finance/narwhal-sdk",
+  "name": "@bishares/narwhal-sdk",
   "license": "MIT",
   "version": "1.0.1",
   "description": "🛠 An SDK for building applications on top of Sushiswap and Uniswap.",
@@ -8,11 +8,11 @@
   "files": [
     "dist"
   ],
-  "repository": "https://github.com/indexed-finance/narwhal-sdk",
+  "repository": "https://github.com/bishares/narwhal-sdk",
   "keywords": [
-    "uniswap",
-    "sushiswap",
-    "ethereum"
+    "apeswap",
+    "pancakeswap",
+    "binance"
   ],
   "module": "dist/sdk.esm.js",
   "scripts": {

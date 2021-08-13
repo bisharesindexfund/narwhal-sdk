@@ -1,19 +1,19 @@
-import { Contract } from '@ethersproject/contracts'
-import { getNetwork } from '@ethersproject/networks'
-import { getDefaultProvider } from '@ethersproject/providers'
-import { TokenAmount } from './entities/fractions/tokenAmount'
-import { Pair } from './entities/pair'
-import IUniswapV2Pair from '@uniswap/v2-core/build/IUniswapV2Pair.json'
-import invariant from 'tiny-invariant'
-import ERC20 from './abis/ERC20.json'
-import { ChainId } from './constants'
-import { Token } from './entities/token'
+import { Contract } from '@ethersproject/contracts';
+import { getNetwork } from '@ethersproject/networks';
+import { getDefaultProvider } from '@ethersproject/providers';
+import { TokenAmount } from './entities/fractions/tokenAmount';
+import { Pair } from './entities/pair';
+import IUniswapV2Pair from '@uniswap/v2-core/build/IUniswapV2Pair.json';
+import invariant from 'tiny-invariant';
+import ERC20 from './abis/ERC20.json';
+import { ChainId } from './constants';
+import { Token } from './entities/token';
 
-let TOKEN_DECIMALS_CACHE: { [chainId: number]: { [address: string]: number } } = {
+let TOKEN_DECIMALS_CACHE: { [chainId: number]: { [address: string]: number; }; } = {
   [ChainId.MAINNET]: {
     '0xE0B7927c4aF23765Cb51314A0E0521A9645F0E2A': 9 // DGD
   }
-}
+};
 
 /**
  * Contains methods for constructing instances of pairs and tokens from on-chain data.
@@ -22,7 +22,7 @@ export abstract class Fetcher {
   /**
    * Cannot be constructed.
    */
-  private constructor() {}
+  private constructor() { }
 
   /**
    * Fetch information for a given token on the given chain, using the given ethers provider.
@@ -43,16 +43,16 @@ export abstract class Fetcher {
       typeof TOKEN_DECIMALS_CACHE?.[chainId]?.[address] === 'number'
         ? TOKEN_DECIMALS_CACHE[chainId][address]
         : await new Contract(address, ERC20, provider).decimals().then((decimals: number): number => {
-            TOKEN_DECIMALS_CACHE = {
-              ...TOKEN_DECIMALS_CACHE,
-              [chainId]: {
-                ...TOKEN_DECIMALS_CACHE?.[chainId],
-                [address]: decimals
-              }
+          TOKEN_DECIMALS_CACHE = {
+            ...TOKEN_DECIMALS_CACHE,
+            [chainId]: {
+              ...TOKEN_DECIMALS_CACHE?.[chainId],
+              [address]: decimals
             }
-            return decimals
-          })
-    return new Token(chainId, address, parsedDecimals, symbol, name)
+          };
+          return decimals;
+        });
+    return new Token(chainId, address, parsedDecimals, symbol, name);
   }
 
   /**
@@ -60,18 +60,18 @@ export abstract class Fetcher {
    * @param tokenA first token
    * @param tokenB second token
    * @param provider the provider to use to fetch the data
-   * @param sushiswap sushiswap if true, uniswap if false
+   * @param pancakeswap pancakeswap if true, apeswap if false
    */
   public static async fetchPairData(
     tokenA: Token,
     tokenB: Token,
-    sushiswap: boolean,
+    pancakeswap: boolean,
     provider = getDefaultProvider(getNetwork(tokenA.chainId))
   ): Promise<Pair> {
-    invariant(tokenA.chainId === tokenB.chainId, 'CHAIN_ID')
-    const address = Pair.getAddress(tokenA, tokenB, sushiswap)
-    const [reserves0, reserves1] = await new Contract(address, IUniswapV2Pair.abi, provider).getReserves()
-    const balances = tokenA.sortsBefore(tokenB) ? [reserves0, reserves1] : [reserves1, reserves0]
-    return new Pair(new TokenAmount(tokenA, balances[0]), new TokenAmount(tokenB, balances[1]), true)
+    invariant(tokenA.chainId === tokenB.chainId, 'CHAIN_ID');
+    const address = Pair.getAddress(tokenA, tokenB, pancakeswap);
+    const [reserves0, reserves1] = await new Contract(address, IUniswapV2Pair.abi, provider).getReserves();
+    const balances = tokenA.sortsBefore(tokenB) ? [reserves0, reserves1] : [reserves1, reserves0];
+    return new Pair(new TokenAmount(tokenA, balances[0]), new TokenAmount(tokenB, balances[1]), true);
   }
 }
